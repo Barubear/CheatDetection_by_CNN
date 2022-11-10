@@ -1,0 +1,14 @@
+single
+dataset/train/cheat\20221019142130_6.txt:label = 1,output = 0
+dataset/test/cheat\20221016185118_6.txt:label = 1,output = 0
+dataset/test/cheat\20221016185118_9.txt:label = 1,output = 0
+dataset/test/cheat\20221019141107_0.txt:label = 1,output = 0
+dataset/test/cheat\20221019141148_5.txt:label = 1,output = 0
+dataset/train/cheat\20221019142512_5.txt:label = 1,output = 0
+two
+dataset/test/cheat\20221019141148_5.txt:label = 1,output = 0
+dataset/test/cheat\20221016185118_6.txt:label = 1,output = 0
+dataset/test/cheat\20221016185118_1.txt:label = 1,output = 0
+dataset/test/cheat\20221019141107_0.txt:label = 1,output = 0
+dataset/test/cheat\20221016185118_9.txt:label = 1,output = 0
+dataset/train/cheat\20221019142130_6.txt:label = 1,output = 0
