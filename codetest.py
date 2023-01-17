@@ -36,7 +36,5 @@ import torch
 # output1 = model(input1.cuda())
 # print(output1)
 
-a = [[1,[12,13]], [2,[23,24]],[3,[34,35]],[4,[45,46]]]
-random.shuffle(a)
-print(a)
+
 

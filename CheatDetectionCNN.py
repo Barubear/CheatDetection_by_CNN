@@ -174,6 +174,7 @@ def TwoChannelCNNtain(epoch, Issave = False, saveEpoch = 10, writepoch = 1):
 #print：print the verify result
 #getACC：return the verify accuracy
 #getTime： return the verify running time
+#getBoth： return the verify running time and verify accuracy
 def verify(nnType,widthFile,AllDataSet = True,Datasize = 1000, returnType = 'print'):
     verify_cheat_dir_path = 'dataset/ verify/cheat'
     verify_dir_path = 'dataset/ verify/normal'
@@ -266,7 +267,8 @@ def verify(nnType,widthFile,AllDataSet = True,Datasize = 1000, returnType = 'pri
     elif returnType == 'getTime':
 
         return time_sum
-
+    elif returnType == 'getBoth':
+        return time_sum , float((currtNum / Datasize) * 100)
 def showDataSetSize():
     verify_cheat_dir_path = 'dataset/ verify/cheat'
     verify_dir_path = 'dataset/ verify/normal'
@@ -282,40 +284,111 @@ def showDataSetSize():
     print("verify dataset： cheat:{}, normal:{}".format(getFileNum(verify_cheat_dir_path), getFileNum(verify_dir_path)))
     print("")
 
-def drawVerifyACC(epoch = 100):
-    SingleAcc = []
-    TwoACC = []
-    for i in range(epoch):
-        SingleAcc.append(verify('single', 'SingleChannelCNN_70.pth', Datasize=1000,returnType='getAcc'))
-        print('single:{}'.format(i))
+def drawVerify(drawtype,Datasize=1000,epoch = 100):
+    if( drawtype == "acc"):
+        SingleAcc = []
+        TwoACC = []
+        for i in range(epoch):
+            SingleAcc.append(verify('single', 'SingleChannelCNN_70.pth', Datasize,returnType='getAcc'))
+            print('single:{}'.format(i))
 
-    for i in range(epoch):
-        TwoACC.append(verify('two', 'TwoChannelCNN_140.pth', Datasize=1000,returnType='getAcc'))
-        print('two:{}'.format(i))
+        for i in range(epoch):
+            TwoACC.append(verify('two', 'TwoChannelCNN_140.pth', Datasize,returnType='getAcc'))
+            print('two:{}'.format(i))
 
-    plt.plot(range(epoch), SingleAcc, color='red', label='SingleACC')
-    plt.plot(range(epoch), TwoACC, color='blue', label='TwoACC')
-    plt.legend(loc=2)
-    plt.show()
 
-def drawVerifyTime(epoch = 100):
-    SingleAcc = []
-    TwoACC = []
-    for i in range(epoch):
-        SingleAcc.append(verify('single', 'SingleChannelCNN_70.pth', Datasize=1000,returnType='getTime'))
-        print('single:{}'.format(i))
+        #avg
+        SingleAvg = sum(SingleAcc)/len(SingleAcc)
+        TwoAvg = sum(TwoACC)/len(TwoACC)
+        #方差
+        SingleVar = np.var(SingleAcc)
+        TwoVar = np.var(TwoACC)
+        print("single : ")
+        print("\t: avg:{},var:{},Max:{},Min:{}".format(SingleAvg,SingleVar,max(SingleAcc),min(SingleAcc)))
+        print("two : ")
+        print("\t: avg:{},var:{},,Max:{},Min:{}".format(TwoAvg, TwoVar,max(TwoACC),min((TwoACC))))
 
-    for i in range(epoch):
-        TwoACC.append(verify('two', 'TwoChannelCNN_140.pth', Datasize=1000,returnType='getTime'))
-        print('two:{}'.format(i))
+        plt.plot(range(epoch), SingleAcc, color='red', label='SingleACC')
+        plt.plot(range(epoch), TwoACC, color='blue', label='TwoACC')
+        plt.legend(loc=2)
+        plt.show()
 
-    plt.plot(range(epoch), SingleAcc, color='red', label='Singletime')
-    plt.plot(range(epoch), TwoACC, color='blue', label='Twotime')
-    plt.legend(loc=2)
-    plt.show()
+    if(drawtype == "time"):
+        Singletime = []
+        Twotime = []
+        for i in range(epoch):
+            Singletime.append(verify('single', 'SingleChannelCNN_70.pth', Datasize, returnType='getTime'))
+            print('single:{}'.format(i))
+
+        for i in range(epoch):
+            Twotime.append(verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getTime'))
+            print('two:{}'.format(i))
+            # avg
+            SingleAvg = sum(SingleAcc) / len(SingleAcc)
+            TwoAvg = sum(TwoACC) / len(TwoACC)
+            # 方差
+        SingleVar = np.var(Singletime)
+        TwoVar = np.var(Twotime)
+        print("single : ")
+        print("\t: avg:{},var:{},Max:{},Min:{}".format(SingleAvg, SingleVar, max(Singletime), min(Singletime)))
+        print("two : ")
+        print("\t: avg:{},var:{},,Max:{},Min:{}".format(TwoAvg, TwoVar, max(Twotime), min((Twotime))))
+        plt.plot(range(epoch), Singletime, color='red', label='Singletime')
+        plt.plot(range(epoch), Twotime, color='blue', label='Twotime')
+        plt.legend(loc=2)
+        plt.show()
+
+
+    if (drawtype == "both"):
+        SingleAcc = []
+        TwoACC = []
+        Singletime = []
+        Twotime = []
+        for i in range(epoch):
+            sumtime,sumacc =verify('single', 'SingleChannelCNN_70.pth', Datasize, returnType='getBoth')
+            Singletime.append(sumtime)
+            SingleAcc.append(sumacc)
+            print('single:{}'.format(i))
+
+        for i in range(epoch):
+            sumtime, sumacc= verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getBoth')
+            Twotime.append(sumtime)
+            TwoACC.append(sumacc)
+            print('two:{}'.format(i))
+
+        # avg
+        SingleACCAvg = sum(SingleAcc) / len(SingleAcc)
+        TwoACCAvg = sum(TwoACC) / len(TwoACC)
+        SingleTimeAvg = sum(SingleAcc) / len(SingleAcc)
+        TwoTimeAvg = sum(TwoACC) / len(TwoACC)
+        # 方差
+        SingleACCVar = np.var(SingleAcc)
+        TwoACCVar = np.var(TwoACC)
+        SingleTimeVar = np.var(SingleAcc)
+        TwoTimeVar = np.var(TwoACC)
+        print("single : ")
+        print("\tACC:")
+        print("\t\tavg:{},var:{},Max:{},Min:{}".format(SingleACCAvg, SingleACCVar,max(SingleAcc),min(SingleAcc)))
+        print("\ttime:")
+        print("\t\tavg:{},var:{},Max:{},Min:{}".format(SingleTimeAvg, SingleTimeVar, max(Singletime), min(Singletime)))
+        print("two : ")
+        print("\tACC:")
+        print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoACCAvg, TwoACCVar,max(TwoACC),min(TwoACC)))
+        print("\ttime:")
+        print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoTimeAvg, TwoTimeVar, max(Twotime), min(Twotime)))
+        plt.figure(1)
+        plt.plot(range(epoch), SingleAcc, color='red', label='SingleACC')
+        plt.plot(range(epoch), TwoACC, color='blue', label='TwoACC')
+        plt.legend(loc=2)
+
+        plt.figure(2)
+        plt.plot(range(epoch), Singletime, color='red', label='Singletime')
+        plt.plot(range(epoch), Twotime, color='blue', label='Twotime')
+        plt.legend(loc=2)
+        plt.show()
 
 def drawWrongFile():
-    WrongFile_path ='E:\PythonWorkSpace\CheatDetection\dataset\wrong'
+    WrongFile_path ='dataset\wrong'
     drawAxis(WrongFile_path)
 
 def main():
@@ -330,9 +403,8 @@ def main():
 
     #verify('two', 'TwoChannelCNN_140.pth', Datasize=1000)
 
-    #drawVerifyACC()
+    drawVerify("both", 1500, 1000)
 
-    #drawWrongFile()
 
     pass
 

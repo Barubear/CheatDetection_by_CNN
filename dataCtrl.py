@@ -185,7 +185,10 @@ test_cheat_dir_path = 'dataset/test/cheat'
 test_dir_path = 'dataset/test/normal'
 verify_cheat_dir_path  ='dataset/ verify/cheat'
 verify_dir_path  ='dataset/ verify/normal'
-#print(getFileNum(verify_cheat_dir_path))
+print(getFileNum(train_cheat_dir_path))
+print(getFileNum(train_dir_path))
+print(getFileNum(test_cheat_dir_path))
+print(getFileNum(test_dir_path))
 #drawAxis(verify_cheat_dir_path)
 #drawAxis(test_cheat_dir_path)
 #print(getFileNum(cheat_dir_path)/11)
@@ -213,4 +216,3 @@ verify_dir_path  ='dataset/ verify/normal'
 # print(train_axis_cheat[0].shape)
 
 # drawAxisNum()
-
