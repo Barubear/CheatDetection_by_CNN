@@ -317,24 +317,28 @@ def drawVerify(drawtype,Datasize=1000,epoch = 100):
         Singletime = []
         Twotime = []
         for i in range(epoch):
-            Singletime.append(verify('single', 'SingleChannelCNN_70.pth', Datasize, returnType='getTime'))
+            sumtime = verify('single', 'SingleChannelCNN_70.pth', Datasize, returnType='getTime')
+            if (i != 0):
+                Singletime.append(sumtime)
             print('single:{}'.format(i))
 
         for i in range(epoch):
-            Twotime.append(verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getTime'))
+            sumtime = verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getTime')
+            if (i != 0):
+                Twotime.append(sumtime)
             print('two:{}'.format(i))
-            # avg
-            SingleAvg = sum(SingleAcc) / len(SingleAcc)
-            TwoAvg = sum(TwoACC) / len(TwoACC)
-            # 方差
+        # avg
+        SingleAvg = sum(Singletime) / len(Singletime)
+        TwoAvg = sum(Twotime) / len(Twotime)
+        # 方差
         SingleVar = np.var(Singletime)
         TwoVar = np.var(Twotime)
         print("single : ")
         print("\t: avg:{},var:{},Max:{},Min:{}".format(SingleAvg, SingleVar, max(Singletime), min(Singletime)))
         print("two : ")
         print("\t: avg:{},var:{},,Max:{},Min:{}".format(TwoAvg, TwoVar, max(Twotime), min((Twotime))))
-        plt.plot(range(epoch), Singletime, color='red', label='Singletime')
-        plt.plot(range(epoch), Twotime, color='blue', label='Twotime')
+        plt.plot(range(epoch-1), Singletime, color='red', label='Singletime')
+        plt.plot(range(epoch-1), Twotime, color='blue', label='Twotime')
         plt.legend(loc=2)
         plt.show()
 
@@ -346,45 +350,47 @@ def drawVerify(drawtype,Datasize=1000,epoch = 100):
         Twotime = []
         for i in range(epoch):
             sumtime,sumacc =verify('single', 'SingleChannelCNN_70.pth', Datasize, returnType='getBoth')
-            Singletime.append(sumtime)
+            if(i !=0):
+                Singletime.append(sumtime)
             SingleAcc.append(sumacc)
             print('single:{}'.format(i))
 
-        for i in range(epoch):
-            sumtime, sumacc= verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getBoth')
-            Twotime.append(sumtime)
-            TwoACC.append(sumacc)
-            print('two:{}'.format(i))
+        #for i in range(epoch):
+         #  sumtime, sumacc= verify('two', 'TwoChannelCNN_140.pth', Datasize, returnType='getBoth')
+          #  if (i != 0):
+           #     Twotime.append(sumtime)
+            #TwoACC.append(sumacc)
+            #print('two:{}'.format(i))
 
         # avg
         SingleACCAvg = sum(SingleAcc) / len(SingleAcc)
-        TwoACCAvg = sum(TwoACC) / len(TwoACC)
-        SingleTimeAvg = sum(SingleAcc) / len(SingleAcc)
-        TwoTimeAvg = sum(TwoACC) / len(TwoACC)
+        #TwoACCAvg = sum(TwoACC) / len(TwoACC)
+        SingleTimeAvg = sum(Singletime) / len(Singletime)
+        #TwoTimeAvg = sum(Twotime) / len(Twotime)
         # 方差
         SingleACCVar = np.var(SingleAcc)
-        TwoACCVar = np.var(TwoACC)
-        SingleTimeVar = np.var(SingleAcc)
-        TwoTimeVar = np.var(TwoACC)
+        #TwoACCVar = np.var(TwoACC)
+        SingleTimeVar = np.var(Singletime)
+        #TwoTimeVar = np.var(Twotime)
         print("single : ")
         print("\tACC:")
         print("\t\tavg:{},var:{},Max:{},Min:{}".format(SingleACCAvg, SingleACCVar,max(SingleAcc),min(SingleAcc)))
         print("\ttime:")
         print("\t\tavg:{},var:{},Max:{},Min:{}".format(SingleTimeAvg, SingleTimeVar, max(Singletime), min(Singletime)))
-        print("two : ")
-        print("\tACC:")
-        print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoACCAvg, TwoACCVar,max(TwoACC),min(TwoACC)))
-        print("\ttime:")
-        print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoTimeAvg, TwoTimeVar, max(Twotime), min(Twotime)))
-        plt.figure(1)
+        #print("two : ")
+        #print("\tACC:")
+        #print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoACCAvg, TwoACCVar,max(TwoACC),min(TwoACC)))
+       # print("\ttime:")
+        #print("\t\tavg:{},var:{},Max:{},Min:{}".format(TwoTimeAvg, TwoTimeVar, max(Twotime), min(Twotime)))
+        #plt.figure(1)
         plt.plot(range(epoch), SingleAcc, color='red', label='SingleACC')
-        plt.plot(range(epoch), TwoACC, color='blue', label='TwoACC')
-        plt.legend(loc=2)
+        #plt.plot(range(epoch), TwoACC, color='blue', label='TwoACC')
+        #plt.legend(loc=2)
 
         plt.figure(2)
-        plt.plot(range(epoch), Singletime, color='red', label='Singletime')
-        plt.plot(range(epoch), Twotime, color='blue', label='Twotime')
-        plt.legend(loc=2)
+        plt.plot(range(epoch-1), Singletime, color='red', label='Singletime')
+        #plt.plot(range(epoch-1), Twotime, color='blue', label='Twotime')
+        #plt.legend(loc=2)
         plt.show()
 
 def drawWrongFile():
@@ -403,7 +409,7 @@ def main():
 
     #verify('two', 'TwoChannelCNN_140.pth', Datasize=1000)
 
-    drawVerify("both", 1500, 1000)
+    drawVerify("both", 2000, 300)
 
 
     pass
