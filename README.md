@@ -8,3 +8,5 @@ A project on **cheat detection**
 **the FPS game**：https://github.com/Barubear/FPS_for_test
 
 **the cheat** ：https://github.com/Barubear/YOLOv5_aimbot
+
+**研究要旨（日本語）** ：https://drive.google.com/file/d/1gzko1JSDWptjlaYBwSQLFjMJgQv9ArGU/view?usp=sharing
